@@ -1,0 +1,43 @@
+// variable.scss中定义的所有颜色变量对象组成的数组
+$colors: (orange: $orange, white: $white, black: $black, red: $red, grey: $grey, blue: $blue, yellow: $yellow, green: $green);
+
+// 生成 .f-s-1 { font-size: 1px; } 至 .f-s-50 { font-size: 50px; } 的class
+@include create-common-px-style('f-s-', 'font-size', 'px', 1, 50);
+// 生成 .m-t-1 { margin-top: 1px; } 至 .m-t-50 { margin-top: 50px; } 的class
+@include create-common-px-style('m-t-', 'margin-top', 'px', 1, 50);
+// 生成 .m-r-1 { margin-right: 1px; } 至 .m-r-50 { margin-right: 50px; } 的class
+@include create-common-px-style('m-r-', 'margin-right', 'px', 1, 50);
+// 生成 .m-b-1 { margin-bottom: 1px; } 至 .m-b-50 { margin-bottom: 50px; } 的class
+@include create-common-px-style('m-b-', 'margin-bottom', 'px', 1, 50);
+// 生成 .m-l-1 { margin-left: 1px; } 至 .m-l-50 { margin-left: 50px; } 的class
+@include create-common-px-style('m-l-', 'margin-left', 'px', 1, 50);
+// 生成 .p-t-1 { padding-top: 1px; } 至 .p-t-50 { padding-top: 50px; } 的class
+@include create-common-px-style('p-t-', 'padding-top', 'px', 1, 50);
+// 生成 .p-r-1 { padding-right: 1px; } 至 .p-r-50 { padding-right: 50px; } 的class
+@include create-common-px-style('p-r-', 'padding-right', 'px', 1, 50);
+// 生成 .p-b-1 { padding-bottom: 1px; } 至 .p-b-50 { padding-bottom: 50px; } 的class
+@include create-common-px-style('p-b-', 'padding-bottom', 'px', 1, 50);
+// 生成 .p-l-1 { padding-left: 1px; } 至 .p-l-50 { padding-left: 50px; } 的class
+@include create-common-px-style('p-l-', 'padding-left', 'px', 1, 50);
+
+// 生成 .f-orange { color: $orange; } .f-white { color: $white; } ...
+@include create-common-color-style($colors, 'f-', 'color');
+
+// 内容超出时，使用省略号
+.text-ellipsis {
+  @include text-ellipsis();
+}
+
+.full-page {
+	height: 100vh;
+}
+
+// 设置iphone安全区域的颜色为灰白色
+.iphone-grey {
+  @include home-indicator-compatible($default-background);
+}
+
+// 设置iphone安全区域的颜色为白色
+.iphone-white {
+  @include home-indicator-compatible($white);
+}

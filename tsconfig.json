@@ -1,0 +1,33 @@
+{
+  "compilerOptions": {
+    "module": "commonjs",
+    "declaration": false,
+    "removeComments": true,
+    "emitDecoratorMetadata": true,
+    "experimentalDecorators": true,
+    "allowSyntheticDefaultImports": true,
+    "target": "es6",
+    "lib": [
+      "es2020",
+    ],
+    "sourceMap": false,
+    "outDir": "./private/server",
+    "baseUrl": "./server",
+    "incremental": true,
+    "allowJs": true,
+    "paths": {
+      "@/*": ["./app/*"],
+      "@assets/*": ["./app/assets/*"],
+      "@images/*": ["./app/assets/images/*"],
+      "@scss/*": ["./app/assets/scss/*"],
+      "@components/*": ["./app/components/*"],
+      "@filter/*": ["./app/filter/*"],
+      "@mixin/*": ["./app/mixin/*"],
+      "@router/*": ["./app/router/*"],
+      "@store/*": ["./app/store/*"],
+      "@utils/*": ["./app/utils/*"],
+      "@src/*": ["./app/src/*"]
+    },
+  },
+  "include": ["./app/**.vue", "./app/**.js", "./app/**.ts", "./server/**.js", "./server/**.ts"]
+}

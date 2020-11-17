@@ -1,0 +1,26 @@
+ARG FROM_IMAGE=node:14-alpine
+
+FROM $FROM_IMAGE
+LABEL maintainer=$MAINTAINER
+
+ENV NPM_CONFIG_REGISTRY="https://registry.npm.taobao.org" \
+    NODE_ENV=production
+
+RUN mkdir -p /usr/etc \
+    && echo -e "registry = https://registry.npm.taobao.org" > /usr/etc/npmrc \
+    && MAIN_VERSION=$(cat /etc/alpine-release  | cut -d '.' -f 0-2) \
+    && mv /etc/apk/repositories /etc/apk/repositories-bak \
+    && { \
+        echo "https://mirrors.aliyun.com/alpine/v${MAIN_VERSION}/main"; \
+        echo "https://mirrors.aliyun.com/alpine/v${MAIN_VERSION}/community"; \
+        echo '@edge https://mirrors.aliyun.com/alpine/edge/main'; \
+        echo '@testing https://mirrors.aliyun.com/alpine/edge/testing'; \
+        echo '@community https://mirrors.aliyun.com/alpine/edge/community'; \
+    } >> /etc/apk/repositories \
+    && apk add --update --no-cache \
+        libgcc libstdc++ libssl1.1 c-ares http-parser \
+        zlib musl file tzdata \
+    && ln -sf /usr/share/zoneinfo/Asia/Shanghai /etc/localtime \
+    && npm install -g nodemon
+
+CMD [ "node" ]

@@ -1,0 +1,10 @@
+{
+  "collection": "@nestjs/schematics",
+  "sourceRoot": "./server/",
+  "root": "./",
+  "entryFile": "server",
+  "compilerOptions": {
+    "webpack": true,
+    "webpackConfigPath": "./build/webpack.nest.server.config.js"
+  }
+}

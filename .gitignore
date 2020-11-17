@@ -1,0 +1,45 @@
+# OS
+.DS_Store
+
+# node
+node_modules
+
+# output
+/public/bundle
+/private/server
+
+# local env files
+.env.local
+.env.*.local
+
+# Logs
+logs
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+lerna-debug.log*
+
+# Editor directories and files
+.idea
+.vscode/settings
+.project
+.classpath
+.c9/
+*.launch
+.settings/
+*.sublime-workspace
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+*.sw*
+
+# Tests
+/coverage
+/.nyc_output
+
+/lib/config/patch.json
+
+# miniprogram
+/miniprogram

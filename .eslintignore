@@ -1,0 +1,5 @@
+/public/bundle/*
+/private/server/*
+node_modules/*
+/.idea
+/miniprogram/*

@@ -1,0 +1,8 @@
+// 创建icon图片样式
+@import "./function/create-icon-style";
+// 单行文本 内容超出时，使用省略号
+@import "./function/text-ellipsis";
+// 兼容iphone安全区域样式
+@import "./function/home-indicator-compatible";
+// 创建全局样式
+@import "./function//create-common-style.scss";

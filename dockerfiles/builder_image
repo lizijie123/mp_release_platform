@@ -1,0 +1,7 @@
+ARG FROM_IMAGE
+FROM $FROM_IMAGE
+
+RUN apk add --update --no-cache \
+        openssh-client build-base git
+
+CMD [ "node" ]

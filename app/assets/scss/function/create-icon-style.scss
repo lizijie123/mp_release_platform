@@ -1,0 +1,16 @@
+/** 
+ * 创建icon图片样式
+ * @param $background-image: icon图标url
+ * @param $width: icon图标宽度 默认值16px
+ * @param $height: icon图标高度 默认值8px
+*/
+@mixin create-icon-style ($background-image, $width: 16px, $height: 8px) {
+  display: inline-block;
+  width: $width;
+  height: $height;
+  background-repeat: no-repeat;
+  background-size: 100% 100%;
+  background-image: url($background-image);
+  background-position: center center;
+  vertical-align: middle;
+}

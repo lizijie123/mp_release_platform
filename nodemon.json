@@ -1,0 +1,13 @@
+{
+  "restartable":"rs",
+  "ignore":[""],
+  "verbose": true,
+  "execMap":{
+    "":"node"
+  },
+  "ext": "js,ts",
+  "watch":[
+    "./server/**"
+  ],
+  "legacy-watch":false
+}

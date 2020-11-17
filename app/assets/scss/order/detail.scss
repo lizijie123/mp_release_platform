@@ -1,0 +1,606 @@
+.border-radius {
+  margin: 0 10px 10px;
+  border-radius: 10px;
+  background-color: $white;
+}
+
+.line {
+  $height: 45px;
+  height: $height;
+  line-height: $height;
+}
+
+.order-detail {
+  padding: 68px 0 60px;
+  overflow-x: hidden;
+
+  .header-bg {
+    position: absolute;
+    width: 100vw;
+    height: 120px;
+    background-color: #4C4948;
+    top: 0;
+    left: 0;
+    z-index: -1;
+    border: {
+      bottom-left-radius: 50% 15px;
+      bottom-right-radius: 50% 15px;
+    }
+  }
+
+  .header-title {
+    position: absolute;
+    width: 100vw;
+    top: 27px;
+    left: 15px;
+    font-size: 18px;
+    color: $white;
+  }
+
+  .progress {
+    @extend .border-radius;
+    padding: 12px 5px;
+
+    .progress-title {
+      padding: 0 10px;
+    }
+  }
+
+  .info-store {
+    @extend .border-radius;
+    padding: 20px 15px;
+
+    .info-store-name {
+      font-size: 12px;
+      color: $black;
+
+      .info-store-tel {
+        display: inline-block;
+        vertical-align: middle;
+        color: $blue;
+        text-decoration: underline;
+        text-decoration-color: $blue;
+        margin-left: 5px;
+      }
+    }
+
+    .info-store-address {
+      color: #969696;
+      font-size: 9px;
+      margin-top: 9px;
+    }
+
+    .logistics {
+      font-size: 12px;
+      color: $black;
+      margin-top: 11px;
+
+      .logistics-tag {
+        $height: 20px;
+        height: $height;
+        line-height: $height;
+        display: inline-block;
+        vertical-align: middle;
+        padding: 0 10px;
+        color: $white;
+        background-color: $blue;
+        border-radius: $height / 2;
+        margin-left: 16px;
+      }
+    }
+  }
+
+  .member-info {
+    @extend .border-radius;
+    padding: 20px 15px;
+
+    .member-info-content {
+      margin-top: 10px;
+
+      .member-name, .member-info-content-tel {
+        display: inline-block;
+        vertical-align: middle;
+      }
+
+      .member-info-content-tel {
+        color: $blue;
+        text-decoration: underline;
+        text-decoration-color: $blue;
+        margin-left: 5px;
+      }
+    }
+  }
+
+  .reserve-time {
+    @extend .border-radius;
+    @extend .line;
+
+    padding: 0 15px;
+    color: $orange;
+    position: relative;
+
+    .reserve-time-btn {
+      $height: 30px;
+      height: $height;
+      line-height: $height;
+      color: $white;
+      background-color: $orange;
+      padding: 0 15px;
+      border-radius: 10px;
+      position: absolute;
+      top: 50%;
+      transform: translateY(-50%);
+      right: 15px;
+    }
+  }
+
+  .sales-goods {
+    @extend .border-radius;
+
+    .sales-goods-server {
+      @extend .line;
+
+      font-size: 15px;
+      color: $orange;
+      position: relative;
+      padding: 0 15px;
+
+      .sales-goods-server-title {
+        display: inline-block;
+        margin-right: 15px;
+        border-bottom: 1px solid $default-background;
+      }
+
+      .sales-goods-server-btn {
+        $height: 30px;
+        height: $height;
+        line-height: $height;
+        position: absolute;
+        top: 50%;
+        right: 15px;
+        transform: translateY(-50%);
+        padding: 0 13px;
+        border-radius: 10px;
+        border: 1px solid $orange;
+      }
+    }
+
+    .sales-goods-title {
+      @extend .line;
+
+      font-size: 15px;
+      color: $black;
+      padding: 0 15px;
+
+      .sales-goods-tag {
+        $height: 20px;
+        height: $height;
+        line-height: $height;
+        display: inline-block;
+        margin-left: 14px;
+        vertical-align: middle;
+        padding: 0 10px;
+        border-radius: 10px;
+        background-color: $orange;
+        color: $white;
+        font-size: 12px;
+      }
+    }
+
+    .sales-goods-item {
+      padding: 15px 15px 0;
+      border-top: 1px solid $default-background;
+
+      .shop-pic, .shop-right, .shop-num {
+        display: inline-block;
+        vertical-align: top;
+      }
+
+      .shop-pic {
+        width: 70px;
+        text-align: center;
+        height: 61px;
+        padding-right: 10px;
+        margin-top: 10px;
+
+        img {
+          max-width: 100%;
+          max-height: 100%;
+        }
+      }
+
+      .shop-num {
+        @extend .line;
+
+        width: 30px;
+        vertical-align: top;
+        color: $orange;
+        text-align: right;
+      }
+
+      .shop-right {
+        width: calc(100% - 110px);
+
+        .shop-title {
+          font-size: 12px;
+          color: $black;
+          margin-bottom: 7px;
+        }
+
+        .tag-box {
+          margin-bottom: 10px;
+
+          .tag-item {
+            display: inline-block;
+            padding: 5px 10px;
+            color: #313131;
+            border-radius: 10px;
+            border: 1px solid #aaa;
+            margin-right: 5px;
+            font-size: 13px;
+            margin-bottom: 5px;
+            max-width: 100px;
+            @include text-ellipsis();
+          }
+        }
+
+        .shop-store {
+          font-size: 12px;
+          color: #646464;
+          margin-bottom: 10px;
+        }
+
+        .shop-tel {
+          font-size: 12px;
+          color: #646464;
+          margin-bottom: 20px;
+        }
+
+        .shop-price {
+          font-size: 18px;
+          color: $red;
+          margin-bottom: 10px;
+          margin-right: 10px;
+          position: relative;
+
+          .shop-btn-box {
+            position: absolute;
+            width: 100%;
+            right: -50px;
+            top: 50%;
+            transform: translateY(-50%);
+            text-align: right;
+
+            .btn {
+              $height: 30px;
+              height: $height;
+              line-height: $height;
+              font-size: 14px;
+              display: inline-block;
+              border-radius: 10px;
+              padding: 0 10px;
+            }
+
+            .shop-to-coupon-btn {
+              @extend .btn;
+
+              color: $white;
+              background-color: $orange;
+            }
+          }
+        }
+      }
+    }
+  }
+
+  .distribution-mode {
+    @extend .border-radius;
+    @extend .line;
+
+    padding: 0 15px;
+    color: $black;
+
+    .pull-right {
+      color: #646464;
+    }
+  }
+
+  .invoice {
+    @extend .border-radius;
+    @extend .line;
+
+    padding: 0 15px;
+    color: $black;
+
+    .pull-right {
+      color: #646464;
+
+      .icon-arrow-right-grey {
+        margin-left: 5px;
+      }
+    }
+  }
+
+  .coupon {
+    @extend .border-radius;
+    font-size: 15px;
+
+    .coupon-title {
+      @extend .line;
+
+      color: $black;
+      padding: 0 15px;
+    }
+
+    .coupon-item {
+      @extend .line;
+
+      color: #636363;
+      padding: 0 15px;
+      border-top: 1px solid $default-background;
+    }
+  }
+
+  .price {
+    @extend .border-radius;
+
+    font-size: 15px;
+    padding: 0 15px;
+
+    .price-title, .price-item {
+      position: relative;
+
+      .price-right {
+        position: absolute;
+        top: 50%;
+        right: 0;
+        transform: translateY(-50%);
+      }
+    }
+
+    .price-title {
+      @extend .line;
+
+      color: $black;
+    }
+
+    .price-item {
+      @extend .line;
+
+      position: relative;
+      color: #636363;
+      border-top: 1px solid $default-background;
+    }
+
+    .refund-btn-box {
+      position: absolute;
+      width: 100%;
+      right: 0;
+      top: 50%;
+      transform: translateY(-50%);
+      text-align: right;
+
+      .btn {
+        $height: 30px;
+        height: $height;
+        line-height: $height;
+        font-size: 14px;
+        display: inline-block;
+        border-radius: 10px;
+        padding: 0 10px;
+      }
+
+      .refund-btn {
+        @extend .btn;
+
+        color: #646464;
+        border: 1px solid #646464;
+        background-color: $white;
+      }
+    }
+  }
+
+  .other-price {
+    @extend .border-radius;
+
+    font-size: 15px;
+
+    .other-price-title {
+      @extend .line;
+
+      color: $black;
+      padding: 0 15px;
+    }
+
+    .other-price-box {
+      border-top: 1px solid $default-background;
+      padding: 0 15px 0 0;
+
+      table {
+        border-collapse: collapse;
+        width: 100%;
+
+        thead {
+          font-size: 13px;
+          width: 100%;
+
+          th {
+            color: #636363;
+          }
+        }
+
+        tbody {
+          font-size: 15px;
+          color: $black;
+          width: 100%;
+        }
+
+        tr {
+          $height: 45px;
+          height: $height;
+          line-height: $height;
+          width: 100%;
+        }
+
+        th, td {
+          text-align: center;
+        }
+      }
+
+      .other-price-delete-box {
+        text-align: right;
+
+        .other-price-delete-btn {
+          $height: 30px;
+          height: $height;
+          line-height: $height;
+          font-size: 14px;
+          color: $red;
+          width: 48px;
+          text-align: center;
+          border: 1px solid $red;
+          border-radius: 5px;
+          display: inline-block;
+        }
+      }
+
+      .other-price-total {
+        @extend .line;
+
+        text-align: right;
+      }
+    }
+  }
+
+  .order-info {
+    @extend .border-radius;
+
+    .order-info-title {
+      @extend .line;
+
+      font-size: 15px;
+      color: $black;
+      padding: 0 15px;
+    }
+
+    .order-info-detail {
+      font-size: 12px;
+      color: #656565;
+      padding: 12px 15px;
+      border-top: 1px solid $default-background;
+
+      .order-no {
+        margin-bottom: 10px;
+      }
+    }
+  }
+
+  .order-info-btn-box {
+    display: flex;
+    margin-bottom: 10px;
+    padding: 0 10px;
+
+    .order-info-again, .order-info-tel {
+      @extend .border-radius;
+      @extend .line;
+
+      width: 100%;
+      text-align: center;
+      margin: 0;
+      font-size: 13px;
+    }
+
+    .order-info-again {
+      color: $orange;
+    }
+
+    .order-info-tel {
+      color: $blue;
+      margin-left: 20px;
+    }
+  }
+
+  .order-qr {
+    @extend .border-radius;
+
+    .order-qr-title {
+      @extend .line;
+
+      font-size: 15px;
+      color: $black;
+      padding: 0 15px;
+    }
+
+    .order-qr-box {
+      text-align: center;
+      color: $black;
+      font-size: 12px;
+      border-top: 1px solid $default-background;
+      padding: 15px;
+
+      .order-qr-img {
+        margin: 15px auto 0;
+        width: 120px;
+        height: 120px;
+
+        img {
+          width: 100%;
+          height: 100%;
+        }
+      }
+    }
+  }
+  .bottom-btn {
+    @extend .line;
+    @include home-indicator-compatible($white);
+
+    position: fixed;
+    left: 0;
+    bottom: 0;
+    width: 100vw;
+    background-color: $white;
+    padding: 0 15px;
+    z-index: 10;
+    border-top: 1px solid $default-background;
+
+    .total {
+      display: inline-block;
+      margin-left: 5px;
+    }
+
+    .btn-box {
+      position: absolute;
+      right: 15px;
+      top: 50%;
+      transform: translateY(-50%);
+      width: 50%;
+      text-align: right;
+
+      .btn {
+        $height: 30px;
+        height: $height;
+        line-height: $height;
+        font-size: 14px;
+        display: inline-block;
+        border-radius: 10px;
+        padding: 0 11px;
+      }
+
+      .cancel-btn {
+        $grey: #979797;
+        @extend .btn;
+
+        color: $grey;
+        border: 1px solid $grey;
+        margin-right: 5px;
+      }
+
+      .submit-btn {
+        @extend .btn;
+
+        color: $white;
+        background-color: $orange;
+      }
+    }
+  }
+}

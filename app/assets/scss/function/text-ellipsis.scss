@@ -1,0 +1,6 @@
+// 单行文本 内容超出时，使用省略号
+@mixin text-ellipsis () {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}

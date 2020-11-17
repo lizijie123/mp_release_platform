@@ -1,0 +1,21 @@
+/** 
+ * 兼容iphone安全区域样式
+ * @param $color: 安全区域背景颜色，默认 #E7E8E8
+*/
+@mixin home-indicator-compatible ($color: #E7E8E8) {
+  margin-bottom: 0;
+  margin-bottom: constant(safe-area-inset-bottom);
+  margin-bottom: env(safe-area-inset-bottom);
+
+  &:after {
+    content: '';
+    width: 100vw;
+    height: 0;
+    height: constant(safe-area-inset-bottom);
+    height: env(safe-area-inset-bottom);
+    position: fixed;
+    left: 0;
+    bottom: 0;
+    background-color: $color;
+  }
+}

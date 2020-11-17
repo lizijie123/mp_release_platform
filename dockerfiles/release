@@ -1,0 +1,44 @@
+ARG BUILDER_IMAGE
+ARG RUNTIME_IMAGE
+
+FROM $BUILDER_IMAGE as Builder
+
+ARG APP_ROOT
+ARG GIT_COMMIT
+
+WORKDIR ${APP_ROOT}
+
+ENV PATH=$APP_ROOT/node_modules/.bin:$PATH
+
+COPY ./ ./
+
+RUN mkdir -p ./tmp \
+    && env NODE_ENV= PHANTOMJS_CDNURL=https://npm.taobao.org/dist/phantomjs/ npm install --silent --no-progress \
+    && env NODE_ENV=production HTTPPORT=3000 npm run build:pro \
+    && env NODE_ENV=production npm prune
+
+###### ================ ######
+
+FROM $RUNTIME_IMAGE
+
+ARG APP_ROOT
+ARG APP_VERSION
+
+RUN addgroup -g 1001 -S rails \
+    && adduser -u 1001 -S rails -G rails
+
+USER rails
+
+COPY --from=Builder --chown=rails:rails ${APP_ROOT} ${APP_ROOT}
+
+WORKDIR ${APP_ROOT}
+
+ENV APP_VERSION=$APP_VERSION \
+    NODE_ENV=production \
+    HTTPPORT=3000 \
+    PATH=$APP_ROOT/node_modules/.bin:$PATH
+
+EXPOSE 3000
+
+ENTRYPOINT ["/bin/sh", "./entrypoint.sh"]
+CMD [ "server" ]

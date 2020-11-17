@@ -1,0 +1,16 @@
+.icon-lzj-logo {
+  @include create-icon-style('@images/icon/icon-lzj.png', 18px, 18px);
+  margin-left: 4px;
+}
+
+.icon-wechat {
+  @include create-icon-style('@images/icon/icon-wechat.png', 18px, 18px);
+}
+
+.icon-alipay {
+  @include create-icon-style('@images/icon/icon-alipay.png', 18px, 18px);
+}
+
+.icon-toutiao {
+  @include create-icon-style('@images/icon/icon-toutiao.png', 18px, 18px);
+}
