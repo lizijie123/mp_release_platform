@@ -9,6 +9,8 @@
 
 ## 2 项目界面介绍
 
+tips: 图片无法加载的话，可以下载项目后看read-image文件夹
+
 ### 2.1 登录页
 
 ![登录界面](./read-image/login.jpg)
