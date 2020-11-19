@@ -233,7 +233,7 @@ export default {
         // 描述
         description: '',
         // 是否同时将该版本设置为体验版
-        experience: false,
+        experience: true,
       },
       // 检验规则
       rules: {
