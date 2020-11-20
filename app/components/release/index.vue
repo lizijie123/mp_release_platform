@@ -401,7 +401,6 @@ export default {
     initUploadForm () {
       this.form.branch = this.mainBranch
       this.form.description = ''
-      this.form.experience = false
     },
     // 初始化预览表单内容
     initPreviewForm () {
