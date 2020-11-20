@@ -8,7 +8,7 @@ export const checkLogin = async (to, from, next, store) => {
     if (store?.state?.infoMember?.online) {
       next()
     } else {
-      return next(`/member/login/password_login?backUrl=${encodeURIComponent(to.fullPath)}`)
+      return next(`/login?backUrl=${encodeURIComponent(to.fullPath)}`)
     }
   } else {
     next()
