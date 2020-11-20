@@ -106,7 +106,7 @@ export class CI {
   getStorePathAndProjectPath (miniprogramType: string, branch: string, version: string): { projectPath: string, storePath: string } {
     let storePath = ''
     if (ciConfigure[miniprogramType].storeDownloadPath.includes('github')) {
-      storePath = ciConfigure[miniprogramType].storeDownloadPath
+      storePath = `${ciConfigure[miniprogramType].storeDownloadPath}#${branch}`
     } else {
       storePath = `direct:${ciConfigure[miniprogramType].storeDownloadPath}?private_token=${ciConfigure[miniprogramType].privateToken}`
       if (storePath.includes('v4')) {
