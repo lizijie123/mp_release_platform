@@ -56,9 +56,9 @@ tips: 图片无法加载的话，可以下载项目后看read-image文件夹
 
 ## 5 启动项目
 
-### 5.1 修改项目配置文件
+### 5.1 本地开发时需要修改项目配置文件(部署到服务器中，不需要修改)
 
-在/lib/configure文件中将redisCFG与mysql字段中的配置改为自己的配置
+在/lib/configure文件中将redisCFG与mysql字段中的配置改为自己的配置，主要修改host字段即可
 
 ```js
 {
@@ -66,7 +66,7 @@ tips: 图片无法加载的话，可以下载项目后看read-image文件夹
   // 配置含义见connect-redis库
   redisCFG: {
     prefix: 'mp_release_platform_sess:',
-    host: 'localhost',
+    host: '0.0.0.0',
     port: 6379,
     db: 8,
   },
@@ -74,8 +74,8 @@ tips: 图片无法加载的话，可以下载项目后看read-image文件夹
   mysql: {
     port: 3306,
     host: '0.0.0.0',
-    user: 'root',
-    password: 'reocar888',
+    user: 'mp',
+    password: 'mp2020',
     database: 'mp_release_platform',
     connectionLimit: 10,
   },
@@ -104,15 +104,65 @@ npm run start:dev
 
 ## 6 项目部署说明
 
-项目推荐使用docker + k8s部署 <br>
+部署项目需要先安装docker，安装完成后再继续下面的步骤
 
-前端页面通过SSR的方式返回，不需要单独部署前端。后端(可以看做node中间层与后端的结合)使用docker制作镜像，通过k8s部署。部署脚本在dockerfiles文件夹中，在项目根目录中执行make即可制作docker镜像。<br>
-
-也就是说使用docker + k8s部署的话，只需要编写mysql和redis的配置文件即可。
+```shell
+# 自行安装git并设置好github的SSH
+# 克隆小程序自动化构建平台项目
+git clone git@github.com:lizijie123/mp_release_platform.git
+# 进入项目目录
+cd mp_release_platform
+# 将小程序自动化构建平台打包为docker镜像
+make
+# 通过docker服务编排同时生成并启动，小程序自动化构建平台容器、redis容器、mysql容器
+docker-compose up
+```
 
 ## 7 常见问题
 
-### 7.1 拉取gitlab项目超时
+### 7.1 数据库数据是乱码
+
+创建mysql的容器之前，需要设置字符集为utf8
+
+```yaml
+# 完整配置
+mysql:
+    restart: always
+    image: mysql:5.6
+    volumes:
+        - ./data:/var/lib/mysql
+    command: [
+      '--character-set-server=utf8',
+      '--collation-server=utf8_general_ci',
+      --default-authentication-plugin=mysql_native_password,
+    ]
+    environment:
+        - MYSQL_ROOT_PASSWORD=root
+        - MYSQL_DATABASE=mp_release_platform
+        - MYSQL_USER=mp
+        - MYSQL_PASSWORD=mp2020
+    ports:
+        - "3306:3306"
+```
+
+对于已经创建了mysql容器的项目，只需要进入mysql中，删掉数据库并重新创建一个即可
+
+```shell
+# 单独启动mysql
+docker-compose up -d mysql
+# 查看mysql容器的id
+docker ps
+# 进入mysql容器
+docker exec -it mysql容器id bash
+# 连接mysql
+mysql -ump -pmp2020
+# 删除数据库
+DROP DATABASE mp_release_platform
+# 创建数据库并执行字符集
+CREATE DATABASE mp_release_platform DEFAULT CHARSET utf8 COLLATE utf8_general_ci
+```
+
+### 7.2 拉取gitlab项目超时
 
 公司gitlab一般只允许内网访问，部署在云服务器上的项目会出现无法访问gitlab项目的问题，需要运维同事帮忙在gitlab项目中设置访问白名单。
 
@@ -120,7 +170,7 @@ npm run start:dev
 
 当环境变量NODE_ENV为production时(也就是我们的小程序自动化构建平台这个项目运行时，设置的NODE_ENV)，npm install或yarn install只会安装dependencies，而不会安装devDependencies列表中的包，需要将安装命令改为npm install --dev或yarn install --production=false
 
-### 7.2 编译项目过程中出现内存溢出问题
+### 7.3 编译项目过程中出现内存溢出问题
 
 * 报错日志: FATAL ERROR: CALL_AND_RETRY_LAST Allocation failed - process out of memory
 
