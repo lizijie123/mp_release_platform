@@ -33,7 +33,7 @@ else
 endif
 
 ifeq ("$(BUILD_TAG)","")
-	BUILD_TAG	:= $(shell date +%Y%m%d%H%M)
+	BUILD_TAG	:= 2020
 endif
 
 .PHONY: docker base builder clean
