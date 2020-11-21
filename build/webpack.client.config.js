@@ -6,21 +6,34 @@ const cssnano = require('cssnano')
 const VueSSRClientPlugin = require('vue-server-renderer/client-plugin')
 const webpackBaseConfig = require('./webpack.base.config')
 const { ENV } = require('../lib/constants')
+const utils = require('../lib/utils')
 
 const config = {
   entry: {
     app: ENV.PATHS.CLIENT_ENTRY,
   },
   optimization: {
-    runtimeChunk: {
-      name: 'manifest',
-    },
+    runtimeChunk: true,
     splitChunks: {
+      chunks: 'all',
       cacheGroups: {
-        vendor: {
+        libs: {
+          name: 'chunk-libs',
           test: /[\\/]node_modules[\\/]/,
-          name: 'vendor',
-          chunks: 'all',
+          priority: 10,
+          chunks: 'initial',
+        },
+        elementUI: {
+          name: 'chunk-elementUI',
+          priority: 20,
+          test: /[\\/]node_modules[\\/]element-ui[\\/]/,
+        },
+        utils: {
+          name: 'chunk-utils',
+          test: utils.fixedToRelativePath('/app/utils'),
+          minChunks: 2,
+          priority: 5,
+          reuseExistingChunk: true,
         },
       },
     },

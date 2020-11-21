@@ -34,6 +34,7 @@ async function bootstrap(): Promise<void> {
 
   app.useStaticAssets(path.join(process.cwd(), '/public/'), {
     prefix: '/',
+    maxAge: 60 * 60 * 24 * 365,
   })
   app.use(cookieParser())
 
