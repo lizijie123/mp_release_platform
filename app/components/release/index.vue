@@ -486,7 +486,8 @@ export default {
     // 更新发布中的任务
     updataTask (task) {
       if (!task.id) return
-      const { tasks } = this
+      const { tasks, miniprogramType } = this
+      if (tasks.type !== miniprogramType) return
       const index = tasks.findIndex(item => item.id === task.id)
       try {
         Object.assign(task, {

@@ -4,18 +4,10 @@ import * as fs from 'fs'
 import * as utils from '../utils/index'
 
 export class CiAlipay {
-  hasInitProject: boolean
-
-  constructor () {
-    this.hasInitProject = false
-  }
   // 上传体验版
   async upload ({ miniprogramType, projectPath, version, experience }): Promise<string | void> {
-    const { hasInitProject } = this
-    if (!hasInitProject) {
-      this.initProject(miniprogramType)
-      this.hasInitProject = true
-    }
+    this.initProject(miniprogramType)
+
     const res = await ci.miniUpload({
       project: `${projectPath}${ciConfigure[miniprogramType].buildProjectChildrenPath}`,
       appId: ciConfigure[miniprogramType].appId,
@@ -30,11 +22,7 @@ export class CiAlipay {
 
   // 创建预览
   async preview ({ miniprogramType, projectPath, pagePath, searchQuery }): Promise<void> {
-    const { hasInitProject } = this
-    if (!hasInitProject) {
-      this.initProject(miniprogramType)
-      this.hasInitProject = true
-    }
+    this.initProject(miniprogramType)
 
     await ci.miniPreview({
       project: `${projectPath}${ciConfigure[miniprogramType].buildProjectChildrenPath}`,
@@ -57,4 +45,4 @@ export class CiAlipay {
   }
 }
 
-export const ciAlipay =  new CiAlipay()
+export const ciAlipay = new CiAlipay()

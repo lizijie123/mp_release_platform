@@ -69,7 +69,7 @@ export function execPromise (command: string, cwd: string): Promise<any> {
   return new Promise(resolve => {
     shell.exec(command, {
       async: true,
-      silent: process.env.NODE_ENV === 'development',
+      silent: process.env.NODE_ENV !== 'development',
       stdio: 'ignore',
       cwd,
     }, (...rest) => {
