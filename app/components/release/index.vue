@@ -473,7 +473,8 @@ export default {
     // 新建发布任务
     createTask (task) {
       if (!task.id) return
-      const { tasks } = this
+      const { tasks, miniprogramType } = this
+      if (task.type !== miniprogramType) return
       try {
         Object.assign(task, {
           journal: JSON.parse(task.journal),
@@ -486,8 +487,7 @@ export default {
     // 更新发布中的任务
     updataTask (task) {
       if (!task.id) return
-      const { tasks, miniprogramType } = this
-      if (tasks.type !== miniprogramType) return
+      const { tasks } = this
       const index = tasks.findIndex(item => item.id === task.id)
       try {
         Object.assign(task, {
