@@ -64,6 +64,7 @@ module.exports = {
         asyncArrow: 'always',
       },
     ],
+    'vue/multi-word-component-names': 'off',
     'import/extensions': ['error', 'always', {
       js: 'never',
       json: 'never',
