@@ -76,11 +76,13 @@ const config = {
           {
             loader: 'postcss-loader',
             options: {
-              plugins: [
-                autoprefixer,
-              ].concat(ENV.PRODUCTION ? [
-                cssnano,
-              ] : []),
+              postcssOptions: {
+                plugins: [
+                  autoprefixer,
+                ].concat(ENV.PRODUCTION ? [
+                  cssnano,
+                ] : []),
+              },
             },
           },
         ],
@@ -93,11 +95,13 @@ const config = {
           {
             loader: 'postcss-loader',
             options: {
-              plugins: [
-                autoprefixer,
-              ].concat(ENV.PRODUCTION ? [
-                cssnano,
-              ] : []),
+              postcssOptions: {
+                plugins: [
+                  autoprefixer,
+                ].concat(ENV.PRODUCTION ? [
+                  cssnano,
+                ] : []),
+              },
             },
           },
           'sass-loader',

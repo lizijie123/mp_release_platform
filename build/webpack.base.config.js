@@ -1,6 +1,6 @@
 const webpack = require('webpack')
 const HtmlWebpackPlugin = require('html-webpack-plugin')
-const VueLoaderPlugin = require('vue-loader/lib/plugin')
+const { VueLoaderPlugin } = require('vue-loader')
 const utils = require('../lib/utils')
 const { ENV } = require('../lib/constants')
 
@@ -79,7 +79,7 @@ const config = {
       '@utils': utils.fixedToRelativePath('/app/utils'),
     },
   },
-  devtool: ENV.DEVELOPMENT ? 'cheap-module-eval-source-map' : 'none',
+  devtool: ENV.DEVELOPMENT ? 'cheap-module-source-map' : false,
 }
 
 module.exports = config

@@ -66,7 +66,7 @@ export function initProjectPath (projectPath: string): void {
 
 // 启用子进程执行shell命令
 export function execPromise (command: string, cwd: string): Promise<any> {
-  return new Promise(resolve => {
+  return new Promise((resolve: any) => {
     shell.exec(command, {
       async: true,
       silent: process.env.NODE_ENV !== 'development',
