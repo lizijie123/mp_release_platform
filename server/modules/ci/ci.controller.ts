@@ -15,7 +15,7 @@ export class CiController {
   @UseGuards(AuthGuard('jwt'))
   @Post('upload')
   async upload (@Req() req: IRequest): Promise<string | Result> {
-    const { miniprogramType, version, branch, projectDesc = '', experience = false } = req.body
+    const { miniprogramType, version, branch, projectDesc = '', experience = false, isPro } = req.body
     if (!miniprogramType || !version || !branch) {
       return utils.encrypt({
         error_code: 1,
@@ -33,6 +33,7 @@ export class CiController {
         version,
         branch,
         projectDesc,
+        isPro,
         userId: id,
         identification: identification || 1,
         experience: experience,
@@ -49,7 +50,7 @@ export class CiController {
   @UseGuards(AuthGuard('jwt'))
   @Post('preview')
   async preview (@Req() req: IRequest): Promise<string | Result> {
-    const { miniprogramType, branch, pagePath = 'src/home/main', searchQuery = '', scene = '' } = req.body
+    const { miniprogramType, branch, pagePath = 'src/home/main', searchQuery = '', scene = '', isPro } = req.body
     if (!miniprogramType || !branch || !pagePath) {
       return utils.encrypt({
         error_code: 1,
@@ -71,6 +72,7 @@ export class CiController {
         scene,
         previewId,
         userId: id,
+        isPro,
       }, this.ciGateway)
     }, 100)
     return utils.encrypt({
@@ -79,6 +81,35 @@ export class CiController {
       result: {
         id: previewId,
       }
+    })
+  }
+
+  // 刷新预览
+  @UseGuards(AuthGuard('jwt'))
+  @Post('refresh-preview')
+  async refreshPreview (@Req() req: IRequest): Promise<string | Result> {
+    const { taskId } = req.body
+    if (!taskId) {
+      return utils.encrypt({
+        error_code: 1,
+        error_msg: '参数不正确',
+        result: {}
+      })
+    }
+    const { id } = req.session?.infoMember || {}
+    if (!id) {
+      throw new HttpException('', 401)
+    }
+    setTimeout(() => {
+      ci.refreshPreview({
+        taskId,
+        userId: id,
+      }, this.ciGateway)
+    }, 100)
+    return utils.encrypt({
+      error_code: 0,
+      error_msg: '',
+      result: {}
     })
   }
 }

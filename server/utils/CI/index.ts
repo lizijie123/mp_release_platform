@@ -22,13 +22,18 @@ export class CI {
   }
 
   // 上传体验版
-  async upload ({ miniprogramType, version, branch, projectDesc, userId, identification, experience }, ciGateway: CiGateway): Promise<void> {
+  async upload ({ miniprogramType, version, branch, projectDesc, userId, identification, experience, isPro }, ciGateway: CiGateway): Promise<void> {
     const taskId = await this.createTask(ciGateway, {
       miniprogramType,
       userId,
       version,
       branch,
       projectDesc,
+      isPro,
+      uploadType: 'upload',
+      pagePath: '',
+      searchQuery: '',
+      scene: '',
     })
     try {
       const { storePath, projectPath } = this.getStorePathAndProjectPath(miniprogramType, branch, version)
@@ -43,12 +48,12 @@ export class CI {
         taskId,
         errorMessage: null,
       })
-      await this.build(miniprogramType, projectPath)
+      await this.build(miniprogramType, projectPath, isPro)
       await this.recordTask('third', ciGateway, {
         taskId,
         errorMessage: null,
       })
-      const qrCodeUrl = await this[realMiniprogramType].upload({
+      await this[realMiniprogramType].upload({
         miniprogramType,
         projectPath,
         version,
@@ -56,6 +61,67 @@ export class CI {
         identification,
         experience,
       })
+      await this.recordTask('fourth', ciGateway, {
+        taskId,
+        errorMessage: null,
+      })
+      ciGateway.confirmTask(userId, miniprogramType)
+    } catch (err) {
+      await this.recordTask('error', ciGateway, {
+        taskId,
+        errorMessage: err.message,
+      })
+    }
+  }
+
+  // 预览
+  async preview ({ userId, miniprogramType, branch, pagePath, searchQuery, scene, previewId, isPro }, ciGateway: CiGateway): Promise<void> {
+    const version = dayjs().format('MM.DD.HH.mm.ss')
+    const taskId = await this.createTask(ciGateway, {
+      miniprogramType,
+      userId,
+      version,
+      branch,
+      projectDesc: '',
+      isPro,
+      uploadType: 'preview',
+      pagePath,
+      searchQuery,
+      scene,
+    })
+
+    try {
+      const { storePath, projectPath } = this.getStorePathAndProjectPath(miniprogramType, branch, version)
+      const realMiniprogramType = (miniprogramType.includes('wechat') && 'wechat') || (miniprogramType.includes('alipay') && 'alipay') || (miniprogramType.includes('toutiao') && 'toutiao')
+
+      await this.recordTask('first', ciGateway, {
+        taskId,
+        errorMessage: null,
+      })
+      await this.download(storePath, projectPath)
+      await this.recordTask('second', ciGateway, {
+        taskId,
+        errorMessage: null,
+      })
+      await this.build(miniprogramType, projectPath, isPro)
+      await this.recordTask('third', ciGateway, {
+        taskId,
+        errorMessage: null,
+      })
+
+      await this[realMiniprogramType].preview({
+        miniprogramType,
+        projectPath,
+        version,
+        pagePath,
+        searchQuery,
+        scene,
+      })
+
+      const image = fs.readFileSync(`${projectPath}/previewQr.jpg`)
+
+      const qrCodeUrl = `data:image/jpeg;base64,${image.toString('base64')}`
+
       await this.recordTask('fourth', ciGateway, {
         taskId,
         errorMessage: null,
@@ -69,25 +135,53 @@ export class CI {
     }
   }
 
-  // 预览
-  async preview ({ userId, miniprogramType, branch, pagePath, searchQuery, scene, previewId }, ciGateway: CiGateway) : Promise<void> {
-    let previewTask: PreviewTask = {
-      id: previewId,
-      journal: [],
-      status: '发布中'
-    }
+  // 刷新预览
+  async refreshPreview ({ userId, taskId }, ciGateway: CiGateway): Promise<void> {
+    const task = await taskService.get(taskId)
+    const time = dayjs().format('YYYY-MM-DD HH:mm:ss')
+    const journal = [
+      {
+        message: '初始化进程与资源',
+        time,
+        interval: '',
+      },
+    ]
+
+    await taskService.updata(Object.assign(task, {
+      userId,
+      status: '发布中',
+      journal: JSON.stringify(journal),
+    }))
+
+    const {
+      type: miniprogramType,
+      branch,
+      version,
+      isPro,
+      pagePath,
+      searchQuery,
+      scene,
+    } = task
 
     try {
-      const version = dayjs().format('MM.DD.HH.mm.ss')
       const { storePath, projectPath } = this.getStorePathAndProjectPath(miniprogramType, branch, version)
       const realMiniprogramType = (miniprogramType.includes('wechat') && 'wechat') || (miniprogramType.includes('alipay') && 'alipay') || (miniprogramType.includes('toutiao') && 'toutiao')
 
-      previewTask = this.recordPreviewTask('first', userId, ciGateway, previewTask)
+      await this.recordTask('first', ciGateway, {
+        taskId,
+        errorMessage: null,
+      })
       await this.download(storePath, projectPath)
-      previewTask = this.recordPreviewTask('second', userId, ciGateway, previewTask)
+      await this.recordTask('second', ciGateway, {
+        taskId,
+        errorMessage: null,
+      })
+      await this.build(miniprogramType, projectPath, isPro)
+      await this.recordTask('third', ciGateway, {
+        taskId,
+        errorMessage: null,
+      })
 
-      await this.build(miniprogramType, projectPath)
-      previewTask = this.recordPreviewTask('third', userId, ciGateway, previewTask)
       await this[realMiniprogramType].preview({
         miniprogramType,
         projectPath,
@@ -96,9 +190,17 @@ export class CI {
         searchQuery,
         scene,
       })
-      this.recordPreviewTask('fourth', userId, ciGateway, previewTask, null, `${projectPath}/previewQr.jpg`)
+
+      await this.recordTask('fourth', ciGateway, {
+        taskId,
+        errorMessage: null,
+      })
+      ciGateway.confirmTask(userId, miniprogramType)
     } catch (err) {
-      this.recordPreviewTask('error', userId, ciGateway, previewTask, err.message)
+      await this.recordTask('error', ciGateway, {
+        taskId,
+        errorMessage: err.message,
+      })
     }
   }
 
@@ -137,14 +239,21 @@ export class CI {
   }
 
   // 构建
-  async build (miniprogramType: string, projectPath: string): Promise<void> {
+  async build (miniprogramType: string, projectPath: string, isPro: number): Promise<void> {
     await utils.execPromise(`npm install`, projectPath)
     await utils.execPromise(`npm install --dev`, projectPath)
-    await utils.execPromise(ciConfigure[miniprogramType].buildCommand, projectPath)
+    let buildCommand = ''
+    if (isPro !== 1) {
+      buildCommand = ciConfigure[miniprogramType].devBuildCommand
+    }
+    if (isPro === 1 || !buildCommand) {
+      buildCommand = ciConfigure[miniprogramType].buildCommand
+    }
+    await utils.execPromise(buildCommand, projectPath)
   }
 
   // 创建任务
-  async createTask (ciGateway: CiGateway, { miniprogramType, userId, version, branch, projectDesc }): Promise<string> {
+  async createTask (ciGateway: CiGateway, { miniprogramType, userId, version, branch, projectDesc, isPro, uploadType, pagePath, searchQuery, scene }): Promise<string> {
     const time = dayjs().format('YYYY-MM-DD HH:mm:ss')
     const journal = [
       {
@@ -163,6 +272,11 @@ export class CI {
       errorMessage: null,
       journal: JSON.stringify(journal),
       qrCodeUrl: null,
+      isPro,
+      uploadType,
+      pagePath,
+      searchQuery,
+      scene
     })
     const task = await taskService.get(id)
     ciGateway.createTask(task)

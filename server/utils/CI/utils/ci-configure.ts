@@ -15,6 +15,8 @@ const ciConfigure = {
     privateToken: '',
     // 小程序打包构建命令
     buildCommand: 'npm run build:wx',
+    // 开发环境小程序打包构建命令(当未配置该值时，默认值为buildCommand)
+    devBuildCommand: 'npm run build:wx -dev',
     // 小程序打包构建完，输出目录与根目录的相对位置
     buildProjectChildrenPath: '/dist/build/mp-weixin',
     // 微信小程序与支付宝小程序需要非对称加密的私钥，privateKeyPath是私钥文件相对根目录的地址，在微信公众平台中拿到

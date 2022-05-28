@@ -85,11 +85,46 @@ class Task extends Model<Task> {
   journal
 
   @Column({
-    type: DataType.STRING(200),
+    type: DataType.TEXT(),
     allowNull: true,
     comment: '体验版二维码',
   })
   qrCodeUrl
+
+  @Column({
+    type: DataType.INTEGER(),
+    allowNull: true,
+    comment: '是否为生产环境应用',
+  })
+  isPro
+
+  @Column({
+    type: DataType.STRING(100),
+    allowNull: true,
+    comment: '上传类型(uplaod: 体验版, preview: 预览版)',
+  })
+  uploadType
+
+  @Column({
+    type: DataType.STRING(1000),
+    allowNull: true,
+    comment: '启动页面，仅预览版存在',
+  })
+  pagePath
+
+  @Column({
+    type: DataType.STRING(1000),
+    allowNull: true,
+    comment: '启动参数，仅预览版存在',
+  })
+  searchQuery
+
+  @Column({
+    type: DataType.STRING(1000),
+    allowNull: true,
+    comment: '场景值，仅预览版存在',
+  })
+  scene
 }
 
 export default Task

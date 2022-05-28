@@ -13,7 +13,7 @@ export class TaskService {
   }
 
   // 创建记录
-  async create ({ userId, type, version, branch, desc, status, errorMessage, journal, qrCodeUrl }): Promise<string> {
+  async create ({ userId, type, version, branch, desc, status, errorMessage, journal, qrCodeUrl, isPro, uploadType, pagePath, searchQuery, scene }): Promise<string> {
     const sql = `
       INSERT INTO task VALUES(
         :id,
@@ -27,7 +27,12 @@ export class TaskService {
         :updateTime,
         :errorMessage,
         :journal,
-        :qrCodeUrl
+        :qrCodeUrl,
+        :isPro,
+        :uploadType,
+        :pagePath,
+        :searchQuery,
+        :scene
       )
     `
     const id = uuid.v4()
@@ -46,6 +51,11 @@ export class TaskService {
         errorMessage: errorMessage || '',
         journal: journal || '',
         qrCodeUrl: qrCodeUrl || '',
+        isPro: isPro,
+        uploadType: uploadType || '',
+        pagePath: pagePath || '',
+        searchQuery: searchQuery || '',
+        scene: scene || '',
       },
       type: QueryTypes.INSERT
     })
@@ -138,7 +148,12 @@ export class TaskService {
         updateTime = :updateTime,
         errorMessage = :errorMessage,
         journal = :journal,
-        qrCodeUrl = :qrCodeUrl
+        qrCodeUrl = :qrCodeUrl,
+        isPro = :isPro,
+        uploadType = :uploadType,
+        pagePath = :pagePath,
+        searchQuery = :searchQuery,
+        scene = :scene
       WHERE id = :id
     `
     const nowTime = dayjs().format('YYYY-MM-DD HH:mm:ss')

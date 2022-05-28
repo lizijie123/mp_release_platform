@@ -43,8 +43,12 @@
           <el-card class='task-item' :key="index" shadow="hover">
             <div slot="header">
               <span>{{task.version}}</span>
-              <span class='pull-right icon-qr' @click='showQr' v-if="miniprogramType.includes('wechat') || miniprogramType.includes('toutiao')"></span>
+              <span class='pull-right icon-qr' @click='showQr' v-if="(miniprogramType.includes('wechat') || miniprogramType.includes('toutiao')) && !task.qrCodeUrl"></span>
+              <span class='pull-right icon-qr' @click='showQr(task)' v-if="(miniprogramType.includes('wechat') || miniprogramType.includes('toutiao')) && task.qrCodeUrl"></span>
               <span class='pull-right icon-qr' @click='showQr(task)' v-else-if="miniprogramType.includes('alipay') && task.qrCodeUrl"></span>
+              <span class='pull-right m-r-5 cursor-pointer' v-if="task.uploadType === 'preview'" @click="refreshTask(task.id)" title="点击刷新任务">
+                <i class='el-icon-refresh' />
+              </span>
             </div>
             <div class='task-body'>
               <template v-if="task.status === '发布失败' && task.errorMessage">
@@ -66,6 +70,26 @@
                 <span class='left-label'>分支:</span>
                 <span class='right-content'>{{task.branch}}</span>
               </div>
+              <el-popover placement="bottom" title="发布参数" width="300" trigger="click">
+                <div class='line'>
+                  <span class='f-grey f-s-12'>启动页面:</span>
+                  <span class='f-black f-s-15'>{{task.pagePath}}</span>
+                </div>
+                <div class='line'>
+                  <span class='f-grey f-s-12'>启动参数:</span>
+                  <span class='f-black f-s-15'>{{task.searchQuery}}</span>
+                </div>
+                <div class='line'>
+                  <span class='f-grey f-s-12'>场景值:</span>
+                  <span class='f-black f-s-15'>{{task.scene}}</span>
+                </div>
+                <div class='line' slot="reference">
+                  <span class='left-label'>发布参数:</span>
+                  <span :class="'right-content f-blue'">
+                    点击查看
+                  </span>
+                </div>
+              </el-popover>
               <div class='line'>
                 <span class='left-label'>上传者:</span>
                 <span class='right-content'>{{(!task.name || task.name === task.account) ? task.account : `${task.name}(${task.account})`}}</span>
@@ -94,6 +118,13 @@
                   </div>
                 </el-popover>
               </template>
+              <div class='line'>
+                <span class='left-label'>标签:</span>
+                <span class='right-content'>
+                  <el-tag>{{task.isPro ? '生产环境' : '开发环境'}}</el-tag>
+                  <el-tag type="success">{{task.uploadType === 'upload' ? '体验版' : '预览版'}}</el-tag>
+                </span>
+              </div>
               <div class='line' v-if="!miniprogramType.includes('alipay')">
                 <span class='left-label'>项目备注:</span>
                 <span class='right-content'>{{task.desc}}</span>
@@ -115,6 +146,9 @@
         </el-form-item>
         <el-form-item prop="description" v-if="!miniprogramType.includes('alipay')">
           <el-input v-model="form.description" placeholder="请输入描述" clearable prefix-icon="el-icon-s-order"></el-input>
+        </el-form-item>
+        <el-form-item prop="version">
+          <el-checkbox v-model="form.isPro">构建{{ form.isPro ? '生产' : '开发' }}环境应用</el-checkbox>
         </el-form-item>
         <el-form-item prop="experience" v-if="miniprogramType.includes('alipay')">
           <el-checkbox v-model="form.experience">是否同时将该版本设置为体验版</el-checkbox>
@@ -157,6 +191,9 @@
         <el-form-item prop="scene" v-if="!miniprogramType.includes('alipay')">
           <el-input v-model="previewForm.scene" placeholder="请输入场景值" clearable prefix-icon="el-icon-s-operation"></el-input>
         </el-form-item>
+        <el-form-item prop="version">
+          <el-checkbox v-model="previewForm.isPro">构建{{ form.isPro ? '生产' : '开发' }}环境应用</el-checkbox>
+        </el-form-item>
       </el-form>
       <span slot="footer">
         <el-button @click="previewVisible = false">取 消</el-button>
@@ -176,6 +213,7 @@ import {
   Card,
   Popover,
   Checkbox,
+  Tag,
 } from 'element-ui'
 import rest from '@utils/rest'
 import * as utils from '@utils/index'
@@ -198,6 +236,7 @@ export default {
     [Card.name]: Card,
     [Popover.name]: Popover,
     [Checkbox.name]: Checkbox,
+    [Tag.name]: Tag,
   },
 
   props: {
@@ -234,6 +273,8 @@ export default {
         description: '',
         // 是否同时将该版本设置为体验版
         experience: true,
+        // 是否构建生产版本应用，对应运行的命令配置为buildCommand，当取消勾选时，对应运行的命令配置为devBuildCommand
+        isPro: true,
       },
       // 检验规则
       rules: {
@@ -270,6 +311,8 @@ export default {
         searchQuery: '',
         // 场景值
         scene: '',
+        // 是否构建生产版本应用，对应运行的命令配置为buildCommand，当取消勾选时，对应运行的命令配置为devBuildCommand
+        isPro: true,
       },
       // 预览表单过滤规则
       previewRules: {
@@ -444,6 +487,7 @@ export default {
           version,
           description,
           experience,
+          isPro,
         },
         miniprogramType,
       } = this
@@ -461,6 +505,7 @@ export default {
         version,
         projectDesc: description,
         experience,
+        isPro: isPro ? 1 : 0,
       })
 
       if (res.error_code && res.error_code !== 0) {
@@ -502,7 +547,11 @@ export default {
     async preview () {
       const {
         previewForm: {
-          branch, pagePath, searchQuery, scene,
+          branch,
+          pagePath,
+          searchQuery,
+          scene,
+          isPro,
         },
         miniprogramType,
       } = this
@@ -521,6 +570,7 @@ export default {
         pagePath,
         searchQuery,
         scene,
+        isPro: isPro ? 1 : 0,
       })
 
       if (res.error_code && res.error_code !== 0) {
@@ -570,6 +620,18 @@ export default {
         this.getTask()
       }
     },
+    // 重置预览任务
+    async refreshTask (taskId) {
+      const res = await rest.post('/ci/refresh-preview', {
+        taskId,
+      })
+
+      if (res.error_code && res.error_code !== 0) {
+        return utils.message(res.error_msg, 'error')
+      }
+
+      utils.message('预览任务开始刷新', 'success')
+    }
   },
 }
 </script>
@@ -643,6 +705,10 @@ export default {
   cursor: pointer;
 }
 
+.cursor-pointer {
+  cursor: pointer;
+}
+
 .icon-qr {
   width: 20px;
   height: 20px;
@@ -677,5 +743,9 @@ export default {
 
 .text-center {
   text-align: center;
+}
+
+.m-r-5 {
+  margin-right: 5px;
 }
 </style>
