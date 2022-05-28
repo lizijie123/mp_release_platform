@@ -1,15 +1,14 @@
 const webpack = require('webpack')
-const merge = require('webpack-merge')
+const webpackMerge = require('webpack-merge')
 const VueSSRServerPlugin = require('vue-server-renderer/server-plugin')
 const nodeExternals = require('webpack-node-externals')
 const autoprefixer = require('autoprefixer')
 const cssnano = require('cssnano')
-const base = require('./webpack.base.config')
+const webpackBaseConfig = require('./webpack.base.config')
 const { ENV } = require('../lib/constants')
 
-module.exports = merge.default(base, {
+const config = {
   target: 'node',
-  devtool: '#source-map',
   entry: ENV.PATHS.SERVER_ENTRY,
   output: {
     filename: 'server-bundle.js',
@@ -56,11 +55,13 @@ module.exports = merge.default(base, {
           {
             loader: 'postcss-loader',
             options: {
-              plugins: [
-                autoprefixer,
-              ].concat(ENV.PRODUCTION ? [
-                cssnano,
-              ] : []),
+              postcssOptions: {
+                plugins: [
+                  autoprefixer,
+                ].concat(ENV.PRODUCTION ? [
+                  cssnano,
+                ] : []),
+              },
             },
           },
         ],
@@ -73,11 +74,13 @@ module.exports = merge.default(base, {
           {
             loader: 'postcss-loader',
             options: {
-              plugins: [
-                autoprefixer,
-              ].concat(ENV.PRODUCTION ? [
-                cssnano,
-              ] : []),
+              postcssOptions: {
+                plugins: [
+                  autoprefixer,
+                ].concat(ENV.PRODUCTION ? [
+                  cssnano,
+                ] : []),
+              },
             },
           },
           'sass-loader',
@@ -103,4 +106,6 @@ module.exports = merge.default(base, {
     }),
     new VueSSRServerPlugin(),
   ],
-})
+}
+
+module.exports = webpackMerge.merge(webpackBaseConfig, config)

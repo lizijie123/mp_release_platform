@@ -51,9 +51,6 @@ module.exports = function setupDevServer (app, templatePath, cb) {
   const clientComplier = webpack(clientConfig)
   const devMiddleware = webpackDevMiddleware(clientComplier, {
     publicPath: clientConfig.output.publicPath,
-    noInfo: true,
-    index: '/',
-    logLevel: process.env.LOG_LEVEL || 'silent',
   })
   app.use(devMiddleware)
   clientComplier.hooks.done.tap('BuildStatsPlugin', stats => {
@@ -61,10 +58,11 @@ module.exports = function setupDevServer (app, templatePath, cb) {
     statsJson.errors.forEach(err => console.log(err))
     statsJson.warnings.forEach(err => console.log(err))
     if (statsJson.errors.length) return
-    clientManifest = JSON.parse(readFile(
-      devMiddleware.fileSystem,
+    const manifest = readFile(
+      devMiddleware.context.outputFileSystem,
       'vue-ssr-client-manifest.json',
-    ))
+    )
+    clientManifest = JSON.parse(manifest)
     update()
   })
   app.use(webpackHotMiddleware(clientComplier, { heartbeat: 5000 }))

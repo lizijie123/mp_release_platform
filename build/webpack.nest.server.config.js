@@ -1,7 +1,7 @@
 const autoprefixer = require('autoprefixer')
 const cssnano = require('cssnano')
 const webpack = require('webpack')
-const VueLoaderPlugin = require('vue-loader/lib/plugin')
+const { VueLoaderPlugin } = require('vue-loader')
 const utils = require('../lib/utils')
 const { ENV } = require('../lib/constants')
 
@@ -34,11 +34,13 @@ module.exports = function (options) {
         {
           loader: 'postcss-loader',
           options: {
-            plugins: [
-              autoprefixer,
-            ].concat(ENV.PRODUCTION ? [
-              cssnano,
-            ] : []),
+            postcssOptions: {
+              plugins: [
+                autoprefixer,
+              ].concat(ENV.PRODUCTION ? [
+                cssnano,
+              ] : []),
+            },
           },
         },
       ],
@@ -51,11 +53,13 @@ module.exports = function (options) {
         {
           loader: 'postcss-loader',
           options: {
-            plugins: [
-              autoprefixer,
-            ].concat(ENV.PRODUCTION ? [
-              cssnano,
-            ] : []),
+            postcssOptions: {
+              plugins: [
+                autoprefixer,
+              ].concat(ENV.PRODUCTION ? [
+                cssnano,
+              ] : []),
+            },
           },
         },
         'sass-loader',
@@ -140,6 +144,7 @@ module.exports = function (options) {
       },
     },
     plugins: newPlugins,
+    devtool: ENV.DEVELOPMENT ? 'cheap-module-source-map' : false,
   }
   return newOptions
 }

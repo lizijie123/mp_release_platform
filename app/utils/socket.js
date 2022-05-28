@@ -1,10 +1,10 @@
-import * as socket from 'socket.io-client'
+import { io } from 'socket.io-client'
 import { browserNotify } from './browserNotify'
 import { releaseMap } from './constants'
 
 export default class Socket {
   constructor (userId, callback = {}) {
-    this.socket = socket(`/?userId=${userId}`)
+    this.socket = io(`/?userId=${userId}`)
     this.callback = callback
     this._init()
   }
