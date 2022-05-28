@@ -120,10 +120,12 @@ export class CI {
 
       const image = fs.readFileSync(`${projectPath}/previewQr.jpg`)
 
+      const qrCodeUrl = `data:image/jpeg;base64,${image.toString('base64')}`
+
       await this.recordTask('fourth', ciGateway, {
         taskId,
         errorMessage: null,
-      }, image)
+      }, qrCodeUrl)
       ciGateway.confirmTask(userId, miniprogramType)
     } catch (err) {
       await this.recordTask('error', ciGateway, {
@@ -136,6 +138,21 @@ export class CI {
   // 刷新预览
   async refreshPreview ({ userId, taskId }, ciGateway: CiGateway): Promise<void> {
     const task = await taskService.get(taskId)
+    const time = dayjs().format('YYYY-MM-DD HH:mm:ss')
+    const journal = [
+      {
+        message: '初始化进程与资源',
+        time,
+        interval: '',
+      },
+    ]
+
+    await taskService.updata(Object.assign(task, {
+      userId,
+      status: '发布中',
+      journal: JSON.stringify(journal),
+    }))
+
     const {
       type: miniprogramType,
       branch,
@@ -267,7 +284,7 @@ export class CI {
   }
 
   // 更新任务记录
-  async recordTask (opportunity: string, ciGateway: CiGateway, { taskId, errorMessage }, qrCodeUrl?: Buffer | void): Promise<void> {
+  async recordTask (opportunity: string, ciGateway: CiGateway, { taskId, errorMessage }, qrCodeUrl?: string | void): Promise<void> {
     const task: Task = await taskService.get(taskId)
     try {
       Object.assign(task, {

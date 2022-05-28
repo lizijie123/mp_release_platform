@@ -85,7 +85,7 @@ class Task extends Model<Task> {
   journal
 
   @Column({
-    type: DataType.BLOB(),
+    type: DataType.TEXT(),
     allowNull: true,
     comment: '体验版二维码',
   })

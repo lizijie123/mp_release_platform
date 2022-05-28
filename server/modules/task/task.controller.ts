@@ -25,14 +25,6 @@ export class TaskController {
     const tasks: Array<Task> = await taskService.getByType(String(miniprogramType), page ? ((Number.parseInt(String(page), 10) - 1) * 10) : 0, limit ? Number.parseInt(String(limit), 10) : 10)
     const total: number = await taskService.getNumByType(String(miniprogramType))
 
-    tasks.map(item => {
-      const qrCodeUrl = `data:image/jpeg;base64,${Buffer.from(item.qrCodeUrl).toString('base64')}`
-
-      Object.assign(item, {
-        qrCodeUrl,
-      })
-    })
-
     return utils.encrypt({
       error_code: 0,
       error_msg: '',
