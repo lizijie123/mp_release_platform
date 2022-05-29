@@ -1,6 +1,6 @@
 {
   "name": "mp_release_platform",
-  "version": "1.0.0",
+  "version": "2.0.0",
   "private": true,
   "description": "小程序发布平台，详情请看README.md",
   "main": "./private/server/server.js",
