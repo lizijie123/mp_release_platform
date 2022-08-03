@@ -210,12 +210,7 @@ export class CI {
     if (ciConfigure[miniprogramType].storeDownloadPath.includes('github')) {
       storePath = `${ciConfigure[miniprogramType].storeDownloadPath}#${branch}`
     } else {
-      storePath = `direct:${ciConfigure[miniprogramType].storeDownloadPath}?private_token=${ciConfigure[miniprogramType].privateToken}`
-      if (storePath.includes('v4')) {
-        storePath += `&ref=${branch}`
-      } else {
-        storePath += `&sha=${branch}`
-      }
+      storePath = `direct:${ciConfigure[miniprogramType].storeDownloadPath}?private_token=${ciConfigure[miniprogramType].privateToken}&ref=${encodeURIComponent(branch)}&sha=${encodeURIComponent(branch)}`
     }
     const projectPath = utils.fixedToRelativePath(`/miniprogram/${miniprogramType}/${version}`)
 
